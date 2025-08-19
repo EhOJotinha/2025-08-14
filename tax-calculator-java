@@ -1,0 +1,76 @@
+import java.util.Scanner;
+
+public class CalculadoraImpostos {
+    static class Contribuinte {
+        String nome;
+        char tipo;
+        double rendaAnual;
+        double gastosComSaude;
+        int numFuncionarios;
+        double imposto;
+    }
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter the number of tax payers: ");
+        int numContribuintes = scanner.nextInt();
+        
+        Contribuinte[] contribuintes = new Contribuinte[numContribuintes];
+        double totalImpostos = 0;
+        
+        for (int i = 0; i < numContribuintes; i++) {
+            contribuintes[i] = new Contribuinte();
+            System.out.println("Tax payer #" + (i + 1) + " data:");
+            
+            System.out.print("Individual or company (i/c)? ");
+            contribuintes[i].tipo = scanner.next().charAt(0);
+            
+            System.out.print("Name: ");
+            scanner.nextLine();
+            contribuintes[i].nome = scanner.nextLine();
+            
+            System.out.print("Anual income: ");
+            contribuintes[i].rendaAnual = scanner.nextDouble();
+            
+            if (contribuintes[i].tipo == 'i') {
+                System.out.print("Health expenditures: ");
+                contribuintes[i].gastosComSaude = scanner.nextDouble();
+                
+                if (contribuintes[i].rendaAnual < 20000.00) {
+                    contribuintes[i].imposto = contribuintes[i].rendaAnual * 0.15;
+                } else {
+                    contribuintes[i].imposto = contribuintes[i].rendaAnual * 0.25;
+                }
+                
+                double abatimento = contribuintes[i].gastosComSaude * 0.50;
+                contribuintes[i].imposto = contribuintes[i].imposto - abatimento;
+                
+                if (contribuintes[i].imposto < 0) {
+                    contribuintes[i].imposto = 0;
+                }
+                
+            } else if (contribuintes[i].tipo == 'c') {
+                System.out.print("Number of employees: ");
+                contribuintes[i].numFuncionarios = scanner.nextInt();
+                
+                if (contribuintes[i].numFuncionarios > 10) {
+                    contribuintes[i].imposto = contribuintes[i].rendaAnual * 0.14;
+                } else {
+                    contribuintes[i].imposto = contribuintes[i].rendaAnual * 0.16;
+                }
+            }
+            
+            totalImpostos += contribuintes[i].imposto;
+        }
+        
+        System.out.println("\nTAXES PAID:");
+        for (int i = 0; i < numContribuintes; i++) {
+            System.out.printf("%s: $ %.2f%n", contribuintes[i].nome, contribuintes[i].imposto);
+        }
+        
+        System.out.printf("%nTOTAL TAXES: $ %.2f%n", totalImpostos);
+        
+        scanner.close();
+    }
+}
